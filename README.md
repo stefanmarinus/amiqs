@@ -1,4 +1,4 @@
-[![arXiv](https://img.shields.io/badge/arXiv-2207.01651-B31B1B.svg)](http://arxiv.org/abs/2207.01651) [![docs](https://readthedocs.org/projects/stefanmarinus-rtd/badge/?version=latest)](https://stefanmarinus-rtd.readthedocs.io/en/latest/?badge=latest) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Language](https://img.shields.io/badge/language-C++-green.svg)](https://www.cplusplus.com)
+[![arXiv](https://img.shields.io/badge/arXiv-2207.01651-B31B1B.svg)](http://arxiv.org/abs/2207.01651) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Language](https://img.shields.io/badge/language-C++-green.svg)](https://www.cplusplus.com)
 
 
 
@@ -21,7 +21,7 @@ Calculates the baryon asymmetry generated via quantum oscillations of right hand
 
 ## Installation
 
-The Makefile can be generate within the main folder by executing the following in the terminal:
+The Makefile can be generate within the AMIQS folder by executing the following:
 
     mkdir build
     cd build
@@ -39,8 +39,6 @@ where X should be a number >100 for sufficient statistics.
 This routine may take roughly >15 seconds.
 
 ## Exemplary Usage
-
-1. Individual point analysis
 
     ./amiqs.exe example.ini
 
