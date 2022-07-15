@@ -4,7 +4,7 @@
 
 # AMIQS
 
-<img src="../github_fig/logo_transparent.png" width="400"> 
+<img src="github_fig/logo_transparent.png" width="400"> 
 
 ##### *`Averaging Method to Integrate Quantum Systems`*<br/> *by [Pilar Hernández](https://inspirehep.net/authors/1006155?ui-citation-summary=true), [Jacobo López-Pávon](https://inspirehep.net/authors/1050355?ui-citation-summary=true), [Nuria Rius](https://inspirehep.net/authors/991635?ui-citation-summary=true) and [Stefan Sandner](https://inspirehep.net/authors/1741540?ui-citation-summary=true)*
 
@@ -42,8 +42,6 @@ This routine may take roughly >15 seconds.
 
 1. Individual point analysis
 
-+Syntax:
-
     ./amiqs.exe example.ini
 
 where the example.ini file contains all initial conditions and its structure should not be changed.
@@ -61,8 +59,8 @@ For any type of comments, questions etc. feel free to contact us at <stefan.sand
 
 ## Acknowledgement 
 
-The code makes use of the ini file decoder [inifile-cpp][https://github.com/Rookfighter/inifile-cpp] and the numerical integrator LSODA 
-in the C++11 version provided by [libsoda-cxx][https://github.com/dilawar/libsoda-cxx].
+The code makes use of the ini file decoder [inifile-cpp](https://github.com/Rookfighter/inifile-cpp) and the numerical integrator LSODA 
+in the C++11 version provided by [libsoda-cxx](https://github.com/dilawar/libsoda-cxx).
 
 
 
