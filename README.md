@@ -1,34 +1,68 @@
-[![arXiv](https://img.shields.io/badge/arXiv-2111.xxxxx-B31B1B.svg)](http://arxiv.org/abs/2201.xxxxx)  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.xxxxxxxx.svg)](https://doi.org/10.5281/zenodo.xxxxxxx) [![docs](https://readthedocs.org/projects/stefanmarinus-rtd/badge/?version=latest)](https://stefanmarinus-rtd.readthedocs.io/en/latest/?badge=latest) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Language](https://img.shields.io/badge/language-C++-green.svg)](https://www.cplusplus.com) [![Language](https://img.shields.io/badge/language-Python3-green.svg)](https://www.python.org)
+[![arXiv](https://img.shields.io/badge/arXiv-2207.01651-B31B1B.svg)](http://arxiv.org/abs/2207.01651) [![docs](https://readthedocs.org/projects/stefanmarinus-rtd/badge/?version=latest)](https://stefanmarinus-rtd.readthedocs.io/en/latest/?badge=latest) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Language](https://img.shields.io/badge/language-C++-green.svg)](https://www.cplusplus.com)
 
 
 
-# AMIQS :otter:
+# AMIQS
 
-<img src="github_fig/logo_transparent.png" width="400"> 
+<img src="../github_fig/logo_transparent.png" width="400"> 
 
 ##### *`Averaging Method to Integrate Quantum Systems`*<br/> *by [Pilar Hernández](https://inspirehep.net/authors/1006155?ui-citation-summary=true), [Jacobo López-Pávon](https://inspirehep.net/authors/1050355?ui-citation-summary=true), [Nuria Rius](https://inspirehep.net/authors/991635?ui-citation-summary=true) and [Stefan Sandner](https://inspirehep.net/authors/1741540?ui-citation-summary=true)*
 
-Calculates the baryon asymmetry generated via quantum oscillations of right handed neutrinos in the early Universe. A Nested Sampling algorithm for an efficient parameter space scan including the light neutrino data constraints is implemented.
+Calculates the baryon asymmetry generated via quantum oscillations of right handed neutrinos in the early Universe. 
 
 
+## Requirements
 
-## Instalation
+| Package | Description |
+| ------ | ----------- |
+| [CMake](https://cmake.org)   | generate the Makefile |
+| [GSL](https://www.gnu.org/software/gsl/) | numerical library for C++ |
 
-See the respective folder for the requirements to compile and run the code.
 
+## Installation
 
+The Makefile can be generate within the main folder by executing the following in the terminal:
 
-## Documentation
+    mkdir build
+    cd build
+    cmake ..
+    make
 
-Take a look at the [AMIQS documentation](https://stefanmarinus-rtd.readthedocs.io/en/latest/) to learn about the code in full detail.
+This should create the executable amiqs.exe!
+
+## Testing
+To check if everything is correctly installed please run
+
+    ./amiqs.exe test X
+
+where X should be a number >100 for sufficient statistics.
+This routine may take roughly >15 seconds.
+
+## Exemplary Usage
+
+1. Individual point analysis
+
++Syntax:
+
+    ./amiqs.exe example.ini
+
+where the example.ini file contains all initial conditions and its structure should not be changed.
+For more explanation please see the file 'example.ini'. 
+
 
 
 ## Citation
 
-If you use the code, please link this repository, and cite [arXiv:2201.xxxxx](http://arxiv.org/abs/2201.xxxxx) and the DOI [10.xxxx/zenodo.xxxxx](https://doi.org/10.xxx/zenodo.xxxxx).
-
+If you use the code, please link this repository, and cite [arXiv:2207.01651](http://arxiv.org/abs/2207.01651).
 
 ## Contact
+
 For any type of comments, questions etc. feel free to contact us at <stefan.sandner@ific.uv.es> :otter:.
+
+## Acknowledgement 
+
+The code makes use of the ini file decoder [inifile-cpp][https://github.com/Rookfighter/inifile-cpp] and the numerical integrator LSODA 
+in the C++11 version provided by [libsoda-cxx][https://github.com/dilawar/libsoda-cxx].
+
 
 
