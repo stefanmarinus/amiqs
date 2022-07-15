@@ -40,7 +40,7 @@ This routine may take roughly >15 seconds.
 
 ## Exemplary Usage
 
-    ./amiqs.exe example.ini
+    ./amiqs.exe ../example.ini
 
 where the example.ini file contains all initial conditions and its structure should not be changed.
 For more explanation please see the file 'example.ini'. 
