@@ -4,6 +4,8 @@
 #include <ctime>  
 #include <thread>
 #include <gsl/gsl_spline2d.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "include/LSODA.h"
 #include "include/common.h"
@@ -35,7 +37,7 @@ double findMax(complx mat[N][M]){
      /*
      Initializing max element
      */
-     double maxElement = INT_MIN;
+     double maxElement = -99999999999.9;
 
      /*
      checking each element of matrix
@@ -60,7 +62,7 @@ double findMin(complx mat[N][M]){
      /*
      Initializing min element
      */
-     double minElement = INT_MAX;
+     double minElement = 99999999999999.9;
 
      /*
      checking each element of matrix
