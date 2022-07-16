@@ -20,7 +20,7 @@ find_package(GSL REQUIRED)
 
 
 # targets
-add_library( lsoda ${CMAKE_CURRENT_SOURCE_DIR}/LSODA.cpp)
+add_library( lsoda ${CMAKE_CURRENT_SOURCE_DIR}/Source/LSODA.cpp)
 include_directories(${GSL_INCLUDE_DIR})
 
 

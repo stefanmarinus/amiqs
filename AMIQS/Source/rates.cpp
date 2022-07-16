@@ -1,6 +1,8 @@
+/*
+Set the interactions rates
+*/
+
 class Rates{
-
-
 private:
     /*
     Set variables used within the class

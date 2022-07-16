@@ -1,10 +1,3 @@
-#include "LSODA.h"
-#include "common.h"
-
-
-using namespace std;
-typedef complex<double> complx;
-
 double yaux[11];
 double sph;
 
@@ -13,9 +6,9 @@ Right Hand Side of the kinetic equation
 */
 void RHS(double t, double* y, void* data, double (&yaux)[11]){
         vector<double> ini = *(vector<double> *)data;
-        double M1, d12, x_ave, hv_interactions, theta, nl_approx, rates_approx, c_matrix_approx, g1_approx;
-        M1= ini[0]; d12= ini[1]; x_ave= ini[2]; hv_interactions= ini[3]; theta = ini[4];
-        nl_approx= ini[5]; rates_approx= ini[6]; c_matrix_approx= ini[7], g1_approx= ini[8];
+        double M1, d12, x_ave, hv_interactions, nl_approx, rates_approx, c_matrix_approx, g1_approx;
+        M1= ini[0]; d12= ini[1]; x_ave= ini[2]; hv_interactions= ini[3]; 
+        nl_approx= ini[4]; rates_approx= ini[5]; c_matrix_approx= ini[6], g1_approx= ini[7];
 
         double g0, g1, g2, s0, s1 ,s2, c_aa, c_ab, g1_r_to_mu;
         if (rates_approx == 1){
@@ -52,22 +45,6 @@ void RHS(double t, double* y, void* data, double (&yaux)[11]){
         else{
                 g1_r_to_mu = 1;
         }
-
-        // /*
-        // Here we make use of eq. (2.15) of https://arxiv.org/pdf/1710.03744.pdf
-        // */
-        // if (t < _XC_){
-        //         d12= ini[1];
-        // }
-        // else{
-        //         double dm_nu     = - sqrt(1.5*pow(10.,-3.) * pow(10.,-18.));
-        //         double d12_bare  = ini[1];
-        //         double M2        = sqrt(d12_bare + pow(M1,2.));
-        //         double dm_bare   = d12_bare /(M1 + M2)/2;
-        //         double dm_phys   = sqrt(pow(dm_bare,2.) + pow(dm_nu,2.) - 2.*dm_bare*dm_nu*cos(theta));
-        //         d12              = dm_phys * (M1 + M2) * 2;
-        // }
-
 
         
         double y00re, y00im, y01re, y01im, y10re, y10im, y11re, y11im, y20re, y20im, y21re, y21im;

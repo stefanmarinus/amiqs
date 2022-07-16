@@ -1,9 +1,3 @@
-#include <complex>
-#include "common.h"
-// #include "Yukawas.cpp"
-
-using namespace std;
-
 class Ana_Approx{
 private:
     double d12, ye1, ymu1, ytau1, ye2, ymu2, ytau2, phie2, phimu2, phitau2, y_sum;

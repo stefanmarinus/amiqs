@@ -5,14 +5,15 @@
 #include <thread>
 #include <gsl/gsl_spline2d.h>
 
-#include "LSODA.h"
-#include "common.h"
-#include "Yukawas.cpp"
-#include "rates.cpp"
-#include "MatMul.cpp"
-#include "kinetic_eq.cpp"
-#include "Ana_Approx.cpp"
-#include "read_ini.cpp"
+#include "include/LSODA.h"
+#include "include/common.h"
+
+#include "Source/Yukawas.cpp"
+#include "Source/rates.cpp"
+#include "Source/MatMul.cpp"
+#include "Source/kinetic_eq.cpp"
+#include "Source/Ana_Approx.cpp"
+#include "Source/read_ini.cpp"
 
 
 using namespace std;
@@ -263,11 +264,11 @@ function joining all the stuff to call and solve the kinetic equaiton
 double amiqs(double hierarchy, double hv_interactions, void* setting_ini, void* param_ini, double info, double safe){
      vector<double> param_var      = *(vector<double> *)param_ini;
      vector<double> setting_var       = *(vector<double> *)setting_ini;
-     double M1, DM_M, yukawa, theta, delta, alpha;
+     double M1, DM_M, yukawa, theta, delta, phi;
      double nl_approx, rates_approx, c_matrix_approx, g1_approx, sph_approx;
      double asym_inst, asym_smooth;
 
-     M1 = param_var[0]; DM_M = param_var[1]; yukawa = param_var[2]; theta = param_var[3]; delta = param_var[4]; alpha = param_var[5];
+     M1 = param_var[0]; DM_M = param_var[1]; yukawa = param_var[2]; theta = param_var[3]; delta = param_var[4]; phi = param_var[5];
      nl_approx= setting_var[0]; rates_approx= setting_var[1]; c_matrix_approx= setting_var[2]; g1_approx= setting_var[3], sph_approx= setting_var[4];
      /*
      Number of equations and time span to solve
@@ -343,8 +344,8 @@ double amiqs(double hierarchy, double hv_interactions, void* setting_ini, void* 
      print yukawa matrices
      no fa falta pro bo...
      */
-     cout << "" << endl;
      if (info == 1){
+          cout << "" << endl;
           for(int i = 0; i<3; i++){
                for(int j = 0; j<2; j++){
                     cout << "YLN[" << i << "][" << j << "] = " << YLN[i][j] << endl;
@@ -356,8 +357,9 @@ double amiqs(double hierarchy, double hv_interactions, void* setting_ini, void* 
                     cout << "Y[" << i << "][" << j << "] = " << Y[i][j] << endl;
                }
           }
-     }
      cout << "" << endl;
+     }
+     
 
 
      double y_sum = sqrt( pow(abs(YLN[0][0]),2) + pow(abs(YLN[1][0]),2) + pow(abs(YLN[2][0]),2) );
@@ -448,7 +450,7 @@ double amiqs(double hierarchy, double hv_interactions, void* setting_ini, void* 
      /*
      store doubles in a pointer which can be passed to the solver
      */
-     vector<double> ini  = {pow(10,M1), d12, x_ave, hv_interactions, theta, nl_approx, rates_approx, c_matrix_approx, g1_approx};
+     vector<double> ini  = {pow(10,M1), d12, x_ave, hv_interactions, nl_approx, rates_approx, c_matrix_approx, g1_approx};
      void *ptr           = &ini;
 
 
@@ -472,11 +474,12 @@ double amiqs(double hierarchy, double hv_interactions, void* setting_ini, void* 
                myres.push_back(y[i]);
           }
           if (info == 1){
-               cout << " x = " << " " << t << "\r" <<  std::flush;
+               cout << " x = " << " " << t << "\r" << flush;
           }
           tout = tout * 1.01;
      }
      lsoda.lsoda_update(fun, neq, y, yout, &t, 1, &istate, ptr, rel_tol, abs_tol);
+     cout << "[AMIQS] Integration finished" << "\r" << flush;
      myres.push_back(t);
      myres.push_back(_ASYMFAC_ * (yout[9] + yout[10] + yout[11]));
      for(int i = 0; i< 12;i++ ){
@@ -536,7 +539,7 @@ double amiqs(double hierarchy, double hv_interactions, void* setting_ini, void* 
 
           file << "# " << "Hierarchy:" << " " << hierarchy_string << " " << "Interactions:" << " " <<  hv_interactions_string << " " <<
           "M1:" << " " << M1 << " " << "DM/M" << " " << DM_M << " " << "y" << " " << yukawa << " " << "theta" << " " << theta << " " << 
-          "delta" << " " << delta << " " << "alpha" << " " << alpha << endl;
+          "delta" << " " << delta << " " << "phi" << " " << phi << endl;
           
           file << "# " << "t" << " "  << "asym" << " " << "mu_e" << " " << "mu_mu" << " " << "mu_tau" << " " << "r11" << " " << "r22" << " " << "Re(r12)" << " " << "Im(r12)" << " " << "rb11" << " " << "rb22" << " " <<
           "Re(rb12)" << " " << "Im(r12)" << " " << "Smooth-Sphaleron-Asym" << endl;
@@ -575,7 +578,7 @@ double amiqs(double hierarchy, double hv_interactions, void* setting_ini, void* 
                cout << GREEN <<    "[AMIQS]" << RESET <<    " Instantaneous Asymmetry:    " << asym_inst << endl;
                cout << GREEN <<    "[AMIQS]" << RESET <<    " Smooth Asymmetry:           " << asym_smooth << endl;
                cout <<             "[AMIQS]" <<             " Deviation:                  " << asym_smooth/asym_inst << endl;
-               cout <<             "[AMIQS]" <<             " Input Parameters:           " << M1 << " " << DM_M << " " << yukawa << " " << theta << " " << delta << " " << alpha << endl;
+               cout <<             "[AMIQS]" <<             " Input Parameters:           " << "M1=" << M1 << " " << "DM/M="<< DM_M << " " << "y=" << yukawa << " " << "th="<< theta << " " << "d=" << delta << " " << "phi=" << phi << endl;
           }
      }
      double asym_final = asym_smooth;
@@ -605,31 +608,20 @@ create matrix with random input parameters for testing purpose
 vector<vector<double>> rand_test(double len_vec){
      srand (static_cast <unsigned> (time(0)));
      double low_angle, high_angle, low_y, high_y, low_dmm, high_dmm, low_m1, high_m1;
-     vector<double> vec_m1(len_vec), vec_dmm(len_vec), vec_y(len_vec), vec_theta(len_vec), vec_delta(len_vec), vec_alpha(len_vec);
+     vector<double> vec_m1(len_vec), vec_dmm(len_vec), vec_y(len_vec), vec_theta(len_vec), vec_delta(len_vec), vec_phi(len_vec);
 
      low_angle= 0.0; high_angle= 2.0*_PI_; low_y= -8.0; high_y= -4.0; low_dmm= -14.0; high_dmm= -1.0; low_m1= -0.9; high_m1= 1.9;
 
-     /*
-     optional write to file the random input params
-     */
-     // ofstream random_parameter_input;
-     // random_parameter_input.open ("../output/random_parameter_input.dat");
      for (int i = 0; i<len_vec; i++){
           vec_m1[i]      =  low_m1      + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(high_m1-low_m1))); 
           vec_dmm[i]     =  low_dmm     + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(high_dmm-low_dmm)));
           vec_y[i]       =  low_y       + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(high_y-low_y)));
           vec_theta[i]   =  low_angle   + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(high_angle-low_angle))); 
           vec_delta[i]   =  low_angle   + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(high_angle-low_angle))); 
-          vec_alpha[i]   =  low_angle   + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(high_angle-low_angle)));
-
-          
-          // random_parameter_input << vec_m1[i] << " " << vec_dmm[i] << " " << vec_y[i] << " " 
-          // << vec_theta[i] << " " << vec_delta[i] << " " << vec_alpha[i] << std::endl;
-          
+          vec_phi[i]   =  low_angle   + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(high_angle-low_angle)));
      }
-     // random_parameter_input.close();
 
-    return {vec_m1, vec_dmm, vec_y, vec_theta, vec_delta, vec_alpha};
+    return {vec_m1, vec_dmm, vec_y, vec_theta, vec_delta, vec_phi};
 }
 
 /*
@@ -645,7 +637,7 @@ double amiqs_testing(double rand_num, void* setting_ini){
      vector<vector<double>> rand_ini;
      vector<double> param_ini;
      vector<double> regimes;
-     vector<double> M1; vector<double> DM_M; vector<double> yukawa; vector<double> theta; vector<double> delta; vector<double> alpha;
+     vector<double> M1; vector<double> DM_M; vector<double> yukawa; vector<double> theta; vector<double> delta; vector<double> phi;
      double ov_num_wLNV, ov_ana_wLNV, ov_num_sLNV, ov_ana_sLNV, white_num;
      double x_0, x_lnv, x_lnv_int, sw_e, sw_mu, sw_tau;
      double hv_interactions, dev;
@@ -659,7 +651,7 @@ double amiqs_testing(double rand_num, void* setting_ini){
      and store the result in individual vectors
      */
      rand_ini= rand_test(pow(10,5));
-     M1= rand_ini[0]; DM_M= rand_ini[1]; yukawa= rand_ini[2]; theta= rand_ini[3]; delta= rand_ini[4]; alpha= rand_ini[5];
+     M1= rand_ini[0]; DM_M= rand_ini[1]; yukawa= rand_ini[2]; theta= rand_ini[3]; delta= rand_ini[4]; phi= rand_ini[5];
 
      /*
      set LNV interactions to true
@@ -695,7 +687,7 @@ double amiqs_testing(double rand_num, void* setting_ini){
           /*
           define i. input parameters
           */
-          param_ini = {M1[index_run], DM_M[index_run], yukawa[index_run], theta[index_run], delta[index_run], alpha[index_run]};
+          param_ini = {M1[index_run], DM_M[index_run], yukawa[index_run], theta[index_run], delta[index_run], phi[index_run]};
           void *ptr_param_ini = &param_ini;
 
           /*
@@ -712,7 +704,7 @@ double amiqs_testing(double rand_num, void* setting_ini){
                if (abs(ov_ana_wLNV) > pow(10,-12)){
                     index_test++;
                     ov_num_wLNV    = amiqs(hierarchy, hv_interactions, setting_ini, ptr_param_ini, 0, 0);
-                    cout << "[AMIQS]" << " Testing routine " << index_test << "/" << rand_num << "\r" << std::flush;
+                    cout << "[AMIQS]" << " Testing routine " << index_test << "/" << rand_num << "\r" << flush;
                     if (ov_num_wLNV/ov_ana_wLNV < dev && ov_num_wLNV/ov_ana_wLNV > 1./dev){
                          index_succes++;
                     }
@@ -730,7 +722,7 @@ double amiqs_testing(double rand_num, void* setting_ini){
                if (abs(ov_ana_sLNV) > pow(10,-12)){
                     index_test++;
                     ov_num_sLNV    = amiqs(hierarchy, hv_interactions, setting_ini, ptr_param_ini, 0, 0);
-                    cout << "[AMIQS]" << " Testing routine " << index_test << "/" << rand_num << "\r" << std::flush;
+                    cout << "[AMIQS]" << " Testing routine " << index_test << "/" << rand_num << "\r" << flush;
                     if (ov_num_sLNV/ov_ana_sLNV < dev && ov_num_sLNV/ov_ana_sLNV > 1./dev){
                          index_succes++;
                     }
@@ -763,7 +755,8 @@ double amiqs_testing(double rand_num, void* setting_ini){
      Done with everything -- do not put anything below this line
      ***********************************************************/
      if (index_fail/index_test < 0.15){
-          cout << GREEN <<  "[AMIQS]" << RESET <<    " Test passed with " << index_succes/index_test*100 << " % accurary (expected > 85%) " << endl;
+          cout << GREEN <<  "[AMIQS]" << RESET <<    " Test succesfully passed                      " << endl;
+          // cout << GREEN <<  "[AMIQS]" << RESET <<    " Test passed with " << index_succes/index_test*100 << " % accurary (expected > 85%) " << endl;
           return _AMIQS_SUCCESS_;     
      }
      else{
@@ -837,6 +830,6 @@ int main(int argc, const char* argv[]){
      /*
      Si arribes ací.... Xe que bo =)
      */
-     cout << CYAN << "Si arribes ací.... Xe que bo =)" << RESET << endl;
+     // cout << CYAN << "Si arribes ací.... Xe que bo =)" << RESET << endl;
      return _AMIQS_SUCCESS_;
 }

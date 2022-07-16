@@ -48,15 +48,15 @@ public:
     void YukawaLN(int hierarchy, void* param_ini, complx (&YLN) [3][2]){
         vector<double> param_var;
         param_var = *(vector<double> *)param_ini;
-        double M1, DM_M, yukawa, theta, delta, alpha;
-        M1 = param_var[0]; DM_M = param_var[1]; yukawa = param_var[2]; theta = param_var[3]; delta = param_var[4]; alpha = param_var[5];
+        double M1, DM_M, yukawa, theta, delta, phi;
+        M1 = param_var[0]; DM_M = param_var[1]; yukawa = param_var[2]; theta = param_var[3]; delta = param_var[4]; phi = param_var[5];
         
         /*
         get the complex angles
         */
         complx th     = polar(1., theta/2.);
         complx dirac  = polar(1., delta);
-        complx maj    = polar(1., alpha);
+        complx maj    = polar(1., phi);
 
         if (hierarchy == 0){
             theta12     = 33.45 * _PI_/180;

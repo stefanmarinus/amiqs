@@ -1,6 +1,4 @@
-#include "inicpp.h"
-#include <iostream>
-#include <string> 
+#include "../include/inicpp.h"
 
 using namespace std;
 
@@ -11,7 +9,7 @@ vector<double> read_ini(string path){
     vector<string> names;
        
     names= {"hierarchy", "hv_interactions", 
-            "M1", "DM_M", "yukawa", "theta", "delta", "alpha", 
+            "M1", "DM_M", "yukawa", "theta", "delta", "phi", 
             "nl_approx", "rates_approx", "c_matrix_approx", "g1_approx", "sph_approx", 
             "info", "safe"};
 
@@ -22,7 +20,6 @@ vector<double> read_ini(string path){
     for(const auto &sectionPair : inif){
         const string &sectionName       = sectionPair.first;
         if (sectionName == "Ini"){
-            cout << "Read .ini file" << endl;
             ini_section++;
             for(const auto &fieldPair : sectionPair.second){
                 const string &fieldName     = fieldPair.first;
@@ -37,6 +34,7 @@ vector<double> read_ini(string path){
     }
 
     if (ini_section != 0){
+        cout << "[AMIQS] Succesfully read .ini file" << endl;
         return vars;
     }
     else{

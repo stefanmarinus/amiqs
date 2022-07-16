@@ -4,8 +4,8 @@
 #include <memory>
 #include <numeric>
 
-#include "LSODA.h"
-#include "common.h"
+#include "../include/LSODA.h"
+#include "../include/common.h"
 
 using namespace std;
 
