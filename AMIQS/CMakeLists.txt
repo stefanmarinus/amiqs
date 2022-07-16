@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED YES)
 # set(CMAKE_CXX_FLAGS "-L/usr/local/lib")
 # with -Werror warning will be raised to error, for example unused variable will be an error..
 # add_definitions(-Wall -Wextra -Werror)
-add_definitions(-Wall)
+# add_definitions(-Wall)
 
 
 
@@ -17,6 +17,11 @@ add_definitions(-Wall)
 find_package(Threads REQUIRED)
 find_package(GSL REQUIRED)
 
+
+# set executable directory
+# could change the amiqs.exe directory to the amiss folder but then would need to change 
+# the relative paths in the .cpp files
+# set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/..)
 
 
 # targets

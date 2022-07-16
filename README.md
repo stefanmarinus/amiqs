@@ -4,7 +4,7 @@
 
 # AMIQS
 
-<img src="github_fig/logo_transparent.png" width="400"> 
+<img src="logo_transparent.png" width="400"> 
 
 ##### *`Averaging Method to Integrate Quantum Systems`*<br/> *by [Pilar Hernández](https://inspirehep.net/authors/1006155?ui-citation-summary=true), [Jacobo López-Pávon](https://inspirehep.net/authors/1050355?ui-citation-summary=true), [Nuria Rius](https://inspirehep.net/authors/991635?ui-citation-summary=true) and [Stefan Sandner](https://inspirehep.net/authors/1741540?ui-citation-summary=true)*
 
