@@ -26,6 +26,13 @@ const double _CABDIAG_  = 257./711.;
 const double _CABOFF_   = 20./711.;
 
 
+const double _G0_       = 0.013296432287963416;
+const double _G1_       = 0.00673722695812018;
+const double _G2_       = -0.00343289;
+const double _S0_       = 0.0428199999972177;
+const double _S1_       = 0.008850333885126667;
+const double _S2_       = -0.01636907336566425;
+
 const double _VEV_      = 246.22/sqrt(2);
 const double _MPL_      = 1.2209*pow(10,19)*sqrt(45/4/pow(_PI_,3)/106.75);
 const double _TSP_      = 131.7;

@@ -45,11 +45,43 @@ public:
         W[1][1] = 1./sqrt(2.);
     }
     
-    void YukawaLN(int hierarchy, void* param_ini, complx (&YLN) [3][2]){
+    void Yukawa_anaLN(void* param_ini, complx (&YLN) [3][2] ){
         vector<double> param_var;
         param_var = *(vector<double> *)param_ini;
-        double M1, DM_M, yukawa, theta, delta, phi;
-        M1 = param_var[0]; DM_M = param_var[1]; yukawa = param_var[2]; theta = param_var[3]; delta = param_var[4]; phi = param_var[5];
+        double ye1, ymu1, ytau1, ye2, ymu2, ytau2, phie2, phimu2, phitau2; 
+
+        ye1= param_var[2]; ymu1= param_var[3]; ytau1= param_var[4]; 
+        ye2= param_var[5]; ymu2= param_var[6]; ytau2= param_var[7]; 
+        phie2= param_var[8]; phimu2= param_var[9]; phitau2= param_var[10];
+
+        YLN[0][0] = pow(10,ye1); YLN[1][0] = pow(10,ymu1); YLN[2][0] = pow(10,ytau1); 
+        YLN[0][1] = pow(10,ye2)*polar(1.,phie2); YLN[1][1] = pow(10,ymu2)*polar(1.,phimu2); YLN[2][1] = pow(10,ytau2)*polar(1.,phitau2);
+    }
+
+    void Yukawa_ana(complx YLN[3][2], complx (&Y) [3][2]){
+        /* 
+        Multiplying matrix YLN and W to get the full Yukawa matrix in the basis
+        where the right handed neutrino mass matrix is real and diagonal
+        */
+        for(int i = 0; i < 3; ++i){
+            for(int j = 0; j < 2; ++j){
+                for(int k = 0; k < 2; ++k){
+                        Yaux[i][j] += YLN[i][k] * W[k][j];
+                }
+                Y[i][j] = Yaux[i][j];
+                // cout << "Y[" << i << "][" << j << "] = " << Y[i][j] << endl; 
+                // cout << "Abs(Y[" << i << "][" << j << "]) = " << abs(Y[i][j]) << endl;  
+            }
+        }
+        Yukawa_reset(Yaux);
+    }
+    
+    void YukawaLN(void* param_ini, complx (&YLN) [3][2]){
+        vector<double> param_var;
+        param_var = *(vector<double> *)param_ini;
+        double hierarchy, M1, DM_M, yukawa, theta, delta, phi;
+        hierarchy= param_var[0]; M1 = param_var[1]; DM_M = param_var[2]; yukawa = param_var[3]; 
+        theta = param_var[4]; delta = param_var[5]; phi = param_var[6];
         
         /*
         get the complex angles

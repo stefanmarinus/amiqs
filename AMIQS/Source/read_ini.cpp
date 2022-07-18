@@ -5,12 +5,13 @@ using namespace std;
 
 vector<double> read_ini(string path){
     static int ini_section;
-    vector<double> vars(14);
+    vector<double> vars(27);
     vector<string> names;
        
-    names= {"hierarchy", "hv_interactions", 
-            "M1", "DM_M", "yukawa", "theta", "delta", "phi", 
-            "nl_approx", "rates_approx", "c_matrix_approx", "g1_approx", "sph_approx", 
+    names= {"param", 
+            "hierarchy", "M1", "DM_M", "yukawa", "theta", "delta", "phi", 
+            "Lambda", "mu", "ye1", "ymu1", "ytau1", "ye2", "ymu2", "ytau2", "phie2", "phimu2", "phitau2",
+            "lnv_rates", "nl_approx", "rates_approx", "c_matrix_approx", "g1_approx", "sph_approx", 
             "info", "safe"};
 
     ini::IniFile inif;
@@ -32,6 +33,7 @@ vector<double> read_ini(string path){
             }
         }
     }
+
 
     if (ini_section != 0){
         cout << "[AMIQS] Succesfully read .ini file" << endl;
