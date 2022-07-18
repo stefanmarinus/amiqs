@@ -33,10 +33,9 @@ This should create the executable amiqs.exe!
 ## Testing
 To check if everything is correctly installed please run
 
-    ./amiqs.exe test X
+    ./amiqs.exe test
 
-where X should be a number >100 for sufficient statistics.
-This routine may take roughly >15 seconds.
+This routine may take roughly 30 seconds.
 
 ## Exemplary Usage
 
