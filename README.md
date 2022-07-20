@@ -21,8 +21,9 @@ Calculates the baryon asymmetry generated via quantum oscillations of right hand
 
 ## Installation
 
-The Makefile can be generate within the AMIQS folder by executing the following:
+The Makefile can be generate within the main folder by executing the following:
 
+    cd amiqs
     mkdir build
     cd build
     cmake ..
