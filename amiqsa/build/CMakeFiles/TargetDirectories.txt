@@ -1,4 +1,0 @@
-/Users/stefan/Documents/GitHub/amiqs/amiqs/build/CMakeFiles/lsoda.dir
-/Users/stefan/Documents/GitHub/amiqs/amiqs/build/CMakeFiles/amiqs.exe.dir
-/Users/stefan/Documents/GitHub/amiqs/amiqs/build/CMakeFiles/edit_cache.dir
-/Users/stefan/Documents/GitHub/amiqs/amiqs/build/CMakeFiles/rebuild_cache.dir
