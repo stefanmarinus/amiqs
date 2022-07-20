@@ -408,7 +408,7 @@ double amiqs(double parametrization, void* setting_ini, void* param_ini, double 
      set averaging scales
      */
      double osc_num_max  = pow(10,3);
-     double osc_freq_max = pow(10,5);
+     double osc_freq_max = pow(10,4);
 
      /*
      print some info
@@ -1068,7 +1068,11 @@ int main(int argc, const char* argv[]){
                */
                setting_ini              = {1, 1, 1, 1, 0, 1};
                void *ptr_setting_ini    = &setting_ini;
-               amiqs_testing(ptr_setting_ini, 10);
+               /*
+               amount of testing points is fixed to some random number
+               */
+              double test_num= 10.;
+               amiqs_testing(ptr_setting_ini, test_num);
           }
           else{
                cout << RED <<  "[AMIQS]" << RESET <<    " Need to pass either:\n i) .ini file \n ii) test " << endl;
