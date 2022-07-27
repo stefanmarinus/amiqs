@@ -1058,7 +1058,7 @@ int main(int argc, const char* argv[]){
           void *ptr_param_ini      = &param_ini;
           setting_ini              = {vars[19], vars[20], vars[21], vars[22], vars[23], vars[24]};
           void *ptr_setting_ini    = &setting_ini;
-          amiqs(param_ini[0], ptr_setting_ini, ptr_param_ini, vars[25], vars[26]);
+          amiqs(vars[0], ptr_setting_ini, ptr_param_ini, vars[25], vars[26]);
      }
      else{
           if (argv[1] == string("test")){
