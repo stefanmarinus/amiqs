@@ -12,7 +12,8 @@ vector<double> read_ini(string path){
             "hierarchy", "M1", "DM_M", "yukawa", "theta", "delta", "phi", 
             "Lambda", "mu", "ye1", "ymu1", "ytau1", "ye2", "ymu2", "ytau2", "phie2", "phimu2", "phitau2",
             "lnv_rates", "nl_approx", "rates_approx", "c_matrix_approx", "g1_approx", "sph_approx", 
-            "info", "safe"};
+            "info", "safe",
+            "zre", "zim"};
 
     ini::IniFile inif;
     inif.load(path);

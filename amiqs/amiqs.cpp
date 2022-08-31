@@ -352,6 +352,7 @@ double amiqs(double parametrization, void* setting_ini, void* param_ini, double 
      vector<double> param_var           = *(vector<double> *)param_ini;
      vector<double> setting_var         = *(vector<double> *)setting_ini;
      double hierarchy, M1, DM_M, yukawa, theta, delta, phi;
+     double zre, zim;
      double Lambda, mu, ye1, ymu1, ytau1, ye2, ymu2, ytau2, phie2, phimu2, phitau2;
      double lnv_rates, nl_approx, rates_approx, c_matrix_approx, g1_approx, sph_approx;
      double asym_inst, asym_smooth;
@@ -370,6 +371,9 @@ double amiqs(double parametrization, void* setting_ini, void* param_ini, double 
 
           M1        = Lambda_to_M1(Lambda, mu);
           DM_M      = mu_to_DM_M(Lambda, mu);
+     }
+     else if (parametrization == 2){
+          hierarchy= param_var[0]; M1 = param_var[1]; DM_M = param_var[2]; zre = param_var[3]; zim = param_var[4]; delta = param_var[5]; phi = param_var[6]; 
      }
 
      /*
@@ -450,12 +454,24 @@ double amiqs(double parametrization, void* setting_ini, void* param_ini, double 
      if(parametrization == 0){
           Yukawa.YukawaLN(param_ini, YLN);
           Yukawa.Yukawa(YLN, Y);
+
+          // YLN[0][0] = 1.99746340* pow(10,-7) * polar(1.,1.07082355); YLN[1][0] = 2.08930761 * pow(10,-6.) * polar(1.,-0.21441471); YLN[2][0] = 1.86841946* pow(10,-6.) * polar(1.,-0.8711756);
+          // YLN[0][1] = 1.99751319*pow(10,-7.) * polar(1.,2.64156543); YLN[1][1] = 2.08931149 * pow(10,-6.) * polar(1.,1.356393); YLN[2][1] = 1.86839934 * pow(10,-6.) * polar(1.,0.69962497);
+
+          // Y[0][0] = YLN[0][0]; Y[1][0] = YLN[1][0]; Y[2][0] = YLN[2][0];
+          // Y[0][1] = YLN[0][1]; Y[1][1] = YLN[1][1]; Y[2][1] = YLN[2][1];
+
      }
-     else{
+     else if (parametrization == 1){
           Yukawa.Yukawa_anaLN(param_ini, YLN);
           Yukawa.Yukawa_ana(YLN, Y);
      }
-     Yukawa.Yukawa(YLN, Y); Yukawa.YukawaHC(Y,YHC); Yukawa.YukawaT(Y,YT); Yukawa.YukawaC(Y,YC);
+     else{
+          Yukawa.Yukawa_CILN(param_ini, YLN);
+          Yukawa.Yukawa_CI(YLN, Y);
+     }
+     // Yukawa.Yukawa(YLN, Y); 
+     Yukawa.YukawaHC(Y,YHC); Yukawa.YukawaT(Y,YT); Yukawa.YukawaC(Y,YC);
 
 
      /*
@@ -463,10 +479,12 @@ double amiqs(double parametrization, void* setting_ini, void* param_ini, double 
      no fa falta pro bo...
      */
      if (info == 1){
-          cout << "" << endl;
-          for(int i = 0; i<3; i++){
-               for(int j = 0; j<2; j++){
-                    cout << "YLN[" << i << "][" << j << "] = " << YLN[i][j] << endl;
+          if (parametrization < 2){
+               cout << "" << endl;
+               for(int i = 0; i<3; i++){
+                    for(int j = 0; j<2; j++){
+                         cout << "YLN[" << i << "][" << j << "] = " << YLN[i][j] << endl;
+                    }
                }
           }
           cout << "" << endl;
@@ -654,11 +672,16 @@ double amiqs(double parametrization, void* setting_ini, void* param_ini, double 
                "M1:" << " " << M1 << " " << "DM/M:" << " " << DM_M << " " << "y:" << " " << yukawa << " " << "theta:" << " " << theta << " " << 
                "delta:" << " " << delta << " " << "phi:" << " " << phi << endl;
           }
-          else{
+          else if (parametrization == 1){
           file << "# " << "Interactions:" << " " <<  lnv_rates_string << " " <<
           "Lambda:" << " " << Lambda << " " << "mu:" << " " << mu << " " << "ye1:" << " " << ye1 << " " << "ymu1:" << " " << ymu1 << " " << 
           "ytau1:" << " " << ytau1 << " " << "ye2:" << " " << ye2 << " " << "ymu2:" << " " << ymu2 << " " << "ytau2:" << " " << ytau2 << " " << 
           " " << "phie2:" << " " << phie2 << " " << "phimu2:" << " " << phimu2 << " " << "phitau2:" << " " << phitau2 << endl;
+          }
+          else{
+               file << "# " << "Hierarchy:" << " " << hierarchy_string << " " << "Interactions:" << " " <<  lnv_rates_string << " " <<
+               "M1:" << " " << M1 << " " << "DM/M:" << " " << DM_M << " " << "zre:" << " " << zre << " " << "zim:" << " " << zim << " " << 
+               "delta:" << " " << delta << " " << "phi:" << " " << phi << endl;
           }
           
 
@@ -702,9 +725,12 @@ double amiqs(double parametrization, void* setting_ini, void* param_ini, double 
                if (parametrization == 0){
                     cout <<             "[AMIQS]" <<             " Input Parameters:           " << "M1=" << M1 << " " << "DM/M="<< DM_M << " " << "y=" << yukawa << " " << "th="<< theta << " " << "d=" << delta << " " << "phi=" << phi << endl;
                }
-               else{
+               else if (parametrization == 1){
                     cout <<             "[AMIQS]" <<             " Input Parameters:           " << "Lambda=" << Lambda << " " << "mu="<< mu << " " << "ye1=" << ye1 << " " << "ymu1="<< ymu1 << " " << "ytau1=" << ytau1 << " " << "ye2=" << ye2
                     << " " << "ymu2=" << ymu2 << " " << "ytau2=" << ytau2 << " " << "phie2=" << phie2 << " " << "phitau2=" << phitau2 << endl;
+               }
+               else{
+                    cout <<             "[AMIQS]" <<             " Input Parameters:           " << "M1=" << M1 << " " << "DM/M="<< DM_M << " " << "zre=" << zre << " " << "zim="<< zim << " " << "d=" << delta << " " << "phi=" << phi << endl; 
                }
           }
      }
@@ -1051,8 +1077,11 @@ int main(int argc, const char* argv[]){
                param_ini = {  vars[8], vars[9], vars[10], vars[11], vars[12], vars[13], 
                               vars[14], vars[15], vars[16], vars[17], vars[18]  };
           }
+          else if(vars[0] == 2){
+               param_ini = {  vars[1], vars[2], vars[3], vars[27], vars[28], vars[6], vars[7]  };
+          }
           else{
-               cout << RED <<  "[AMIQS]" << RESET <<    " Need to pass correct parametrization in the .ini file; 0 or 1. " << endl;
+               cout << RED <<  "[AMIQS]" << RESET <<    " Need to pass correct parametrization in the .ini file; 0 or 1 or 2. " << endl;
                exit(0);
           }
           void *ptr_param_ini      = &param_ini;

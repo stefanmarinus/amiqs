@@ -31,6 +31,11 @@ private:
     complx W[2][2];
     complx Wangl = polar(1., -_PI_/2.);
     complx Yaux[3][2];
+
+    complx Proj[3][2];
+    complx R[2][2];
+    complx ml[3][3];
+    complx MR[2][2];
 public:
     /*
     Constructor of the class; rotation matrix
@@ -43,6 +48,116 @@ public:
         W[0][1] = 1./sqrt(2.);
         W[1][0] = -1./sqrt(2.)*Wangl;
         W[1][1] = 1./sqrt(2.);
+    }
+
+    void Yukawa_CILN(void* param_ini, complx (&YLN) [3][2] ){
+        vector<double> param_var;
+        param_var = *(vector<double> *)param_ini;
+        complx u11, u12, u13, u21, u22, u23, u31, u32, u33;
+        complx r11, r12, r21, r22;
+        double dm1, dm2, dm3;
+        double hierarchy, M1, DM_M, zre, zim, delta, phi;
+        hierarchy= param_var[0]; M1 = param_var[1]; DM_M = param_var[2]; 
+        zre = param_var[3]; zim = param_var[4]; delta = param_var[5]; phi = param_var[6];
+
+        complx dirac  = polar(1., delta);
+        complx maj    = polar(1., phi);
+
+        M1             = pow(10.,M1);
+        DM_M           = pow(10.,DM_M);
+        double M2      = M1 * (DM_M + 1.);
+
+        if (hierarchy == 0){
+            theta12     = 33.45 * _PI_/180;
+            theta13     = 8.62  * _PI_/180;
+            theta23     = 42.1  * _PI_/180;
+            dmsolar     = 7.42  * pow(10,-5) * pow(10,-18);
+            dmatm       = 2.510 * pow(10,-3)  * pow(10,-18);
+            rho         = (sqrt(dmatm) - sqrt(dmsolar))/(sqrt(dmatm) + sqrt(dmsolar));
+        }
+        else if (hierarchy == 1){
+            theta12     = 33.45 * _PI_/180;
+            theta13     = 8.61  * _PI_/180;
+            theta23     = 49.0  * _PI_/180;
+            dmsolar     = 7.42  * pow(10,-5) * pow(10,-18);
+            dmatm       = 2.490 * pow(10,-3)  * pow(10,-18);
+            rho         = (sqrt(dmatm)-sqrt(dmatm-dmsolar))/(sqrt(dmatm) + sqrt(dmatm-dmsolar));
+        }
+        else{
+            cout << RED << "[AMIQS]" << RESET << " Hierarchy not correctly passed" << endl;
+            cout << "=> pass either 0 (NH) or 1 (IH)" << endl;
+            cout << "failing in reading the light neutrino params" << endl;
+            exit(0);
+        }
+        c12 = cos(theta12); s12 = sin(theta12);
+        c13 = cos(theta13); s13 = sin(theta13);
+        c23 = cos(theta23); s23 = sin(theta23);
+
+        /*
+        set up the Upmn matrix
+        */
+        Upmns[0][0] =  c12*c13;
+        Upmns[0][1] =  s12*c13*maj;
+        Upmns[0][2] =  s13*conj(dirac);
+        Upmns[1][0] = (-s12*c23 - c12*s13*s23*dirac);
+        Upmns[1][1] =  (c12*c23 - s12*s13*s23*dirac)*maj;
+        Upmns[1][2] =  c13*s23;
+        Upmns[2][0] =  (s12*s23 - c12*s13*c23*dirac);
+        Upmns[2][1] = (-c12*s23 - s12*s13*c23*dirac)*maj;
+        Upmns[2][2] =  c13*c23;
+
+        u11= conj(Upmns[0][0]); u12= conj(Upmns[0][1]); u13= conj(Upmns[0][2]);
+        u21= conj(Upmns[1][0]); u22= conj(Upmns[1][1]); u23= conj(Upmns[1][2]);
+        u31= conj(Upmns[2][0]); u32= conj(Upmns[2][1]); u33= conj(Upmns[2][2]);
+
+
+        R[0][0]     = cos(zre + 1i*zim);
+        R[0][1]     = sin(zre + 1i*zim);
+        R[1][0]     = - R[0][1];
+        R[1][1]     = R[0][0];
+
+        r11= R[0][0]; r12= R[0][1]; r21= R[1][0]; r22= R[1][1];
+
+
+        if (hierarchy == 0){
+            Proj[0][0]= 0; Proj[0][1]= 0; Proj[1][0]= 1; Proj[1][1]= 0; Proj[2][0]= 0; Proj[2][1]= 1;
+        }
+        else{
+            Proj[0][0]= 1; Proj[0][1]= 0; Proj[1][0]= 0; Proj[1][1]= 1; Proj[2][0]= 0; Proj[2][1]= 0;
+        }
+
+
+        if (hierarchy == 0){
+            dm2 = sqrt(sqrt(dmsolar)); dm3= sqrt(sqrt(dmatm));
+
+            YLN[0][0]   = -1.*1i*1./_VEV_*sqrt(M1)*(dm2*r11*u12 + dm3*r12*u13);
+            YLN[0][1]   = -1.*1i*1./_VEV_*sqrt(M2)*(-(dm2*r12*u12) + dm3*r22*u13);
+            YLN[1][0]   = -1.*1i*1./_VEV_*sqrt(M1)*(dm2*r11*u22 + dm3*r12*u23);
+            YLN[1][1]   = -1.*1i*1./_VEV_*sqrt(M2)*(-(dm2*r12*u22) + dm3*r22*u23);
+            YLN[2][0]   = -1.*1i*1./_VEV_*sqrt(M1)*(dm2*r11*u32 + dm3*r12*u33);
+            YLN[2][1]   = -1.*1i*1./_VEV_*sqrt(M2)*(-(dm2*r12*u32) + dm3*r22*u33);
+            
+        }
+        else{
+            dm1 = sqrt(sqrt(dmatm - dmsolar)); dm2= sqrt(sqrt(dmatm));
+
+            YLN[0][0]   = -1.*1i*1./_VEV_*sqrt(M1)*(dm1*r11*u11 + dm2*r12*u12);
+            YLN[0][1]   = -1.*1i*1./_VEV_*sqrt(M2)*(-(dm1*r12*u11) + dm2*r22*u12);
+            YLN[1][0]   = -1.*1i*1./_VEV_*sqrt(M1)*(dm1*r11*u21 + dm2*r12*u22);
+            YLN[1][1]   = -1.*1i*1./_VEV_*sqrt(M2)*(-(dm1*r12*u21) + dm2*r22*u22);
+            YLN[2][0]   = -1.*1i*1./_VEV_*sqrt(M1)*(dm1*r11*u31 + dm2*r12*u32);
+            YLN[2][1]   = -1.*1i*1./_VEV_*sqrt(M2)*(-(dm1*r12*u31) + dm2*r22*u32);
+
+        }
+
+    }
+
+    void Yukawa_CI(complx YLN[3][2], complx (&Y) [3][2]){
+        for(int i = 0; i < 3; ++i){
+            for(int j = 0; j < 2; ++j){
+                Y[i][j] = YLN[i][j];
+            }
+        }
     }
     
     void Yukawa_anaLN(void* param_ini, complx (&YLN) [3][2] ){
