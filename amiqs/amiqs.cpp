@@ -418,7 +418,7 @@ double amiqs(double parametrization, void* setting_ini, void* param_ini, double 
      print some info
      */
      if (info == 1){
-          if (parametrization == 0){
+          if (parametrization == 0 || parametrization == 2){
                if (hierarchy == 0){
                     cout << "[AMIQS] Normal Hierarchy                 " << endl;
                }
@@ -580,7 +580,9 @@ double amiqs(double parametrization, void* setting_ini, void* param_ini, double 
      if you dont need this info just comment the function call
      */
      if (info == 1){
-          print_transition_times(parametrization, lnv_rates, param_ini);
+          if (parametrization != 2){
+               print_transition_times(parametrization, lnv_rates, param_ini);
+          }
      }
 
      /*
