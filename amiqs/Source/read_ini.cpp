@@ -5,13 +5,13 @@ using namespace std;
 
 vector<double> read_ini(string path){
     static int ini_section;
-    vector<double> vars(27);
+    vector<double> vars(30);
     vector<string> names;
        
     names= {"param", 
             "hierarchy", "M1", "DM_M", "yukawa", "theta", "delta", "phi", 
             "Lambda", "mu", "ye1", "ymu1", "ytau1", "ye2", "ymu2", "ytau2", "phie2", "phimu2", "phitau2",
-            "lnv_rates", "nl_approx", "rates_approx", "c_matrix_approx", "g1_approx", "sph_approx", 
+            "lnv_rates", "nl_approx", "rates_approx", "c_matrix_approx", "g1_approx", "sph_approx", "mthM_approx",
             "info", "safe",
             "zre", "zim"};
 
@@ -41,6 +41,7 @@ vector<double> read_ini(string path){
         return vars;
     }
     else{
+        cout << "Failure in read_ini.cpp" << endl;
         cout << "The .ini file needs to contain the section [Ini]" << endl;
         cout << "It is the only section which will be read" << endl;
         exit(0);

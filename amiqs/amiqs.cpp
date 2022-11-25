@@ -12,6 +12,7 @@
 
 #include "Source/Yukawas.cpp"
 #include "Source/rates.cpp"
+#include "Source/thermal_mass_LNV.cpp"
 #include "Source/MatMul.cpp"
 #include "Source/kinetic_eq.cpp"
 #include "Source/Ana_Approx.cpp"
@@ -354,11 +355,13 @@ double amiqs(double parametrization, void* setting_ini, void* param_ini, double 
      double hierarchy, M1, DM_M, yukawa, theta, delta, phi;
      double zre, zim;
      double Lambda, mu, ye1, ymu1, ytau1, ye2, ymu2, ytau2, phie2, phimu2, phitau2;
-     double lnv_rates, nl_approx, rates_approx, c_matrix_approx, g1_approx, sph_approx;
+     double lnv_rates, nl_approx, rates_approx, c_matrix_approx, g1_approx, sph_approx, mthM_approx;
      double asym_inst, asym_smooth;
 
 
-     lnv_rates= setting_var[0]; nl_approx= setting_var[1]; rates_approx= setting_var[2]; c_matrix_approx= setting_var[3]; g1_approx= setting_var[4], sph_approx= setting_var[5];
+     lnv_rates= setting_var[0]; nl_approx= setting_var[1]; rates_approx= setting_var[2]; c_matrix_approx= setting_var[3]; 
+     g1_approx= setting_var[4], sph_approx= setting_var[5]; mthM_approx= setting_var[6];
+
 
      if (parametrization == 0){
           hierarchy= param_var[0]; M1 = param_var[1]; DM_M = param_var[2]; yukawa = param_var[3]; theta = param_var[4]; delta = param_var[5]; phi = param_var[6];
@@ -454,13 +457,6 @@ double amiqs(double parametrization, void* setting_ini, void* param_ini, double 
      if(parametrization == 0){
           Yukawa.YukawaLN(param_ini, YLN);
           Yukawa.Yukawa(YLN, Y);
-
-          // YLN[0][0] = 1.99746340* pow(10,-7) * polar(1.,1.07082355); YLN[1][0] = 2.08930761 * pow(10,-6.) * polar(1.,-0.21441471); YLN[2][0] = 1.86841946* pow(10,-6.) * polar(1.,-0.8711756);
-          // YLN[0][1] = 1.99751319*pow(10,-7.) * polar(1.,2.64156543); YLN[1][1] = 2.08931149 * pow(10,-6.) * polar(1.,1.356393); YLN[2][1] = 1.86839934 * pow(10,-6.) * polar(1.,0.69962497);
-
-          // Y[0][0] = YLN[0][0]; Y[1][0] = YLN[1][0]; Y[2][0] = YLN[2][0];
-          // Y[0][1] = YLN[0][1]; Y[1][1] = YLN[1][1]; Y[2][1] = YLN[2][1];
-
      }
      else if (parametrization == 1){
           Yukawa.Yukawa_anaLN(param_ini, YLN);
@@ -495,6 +491,7 @@ double amiqs(double parametrization, void* setting_ini, void* param_ini, double 
           }
      cout << "" << endl;
      }
+
      
 
 
@@ -588,7 +585,7 @@ double amiqs(double parametrization, void* setting_ini, void* param_ini, double 
      /*
      store doubles in a pointer which can be passed to the solver
      */
-     vector<double> ini  = {pow(10,M1), d12, x_ave, lnv_rates, nl_approx, rates_approx, c_matrix_approx, g1_approx};
+     vector<double> ini  = {pow(10,M1), d12, x_ave, lnv_rates, nl_approx, rates_approx, c_matrix_approx, g1_approx, mthM_approx};
      void *ptr           = &ini;
 
 
@@ -754,6 +751,124 @@ double amiqs(double parametrization, void* setting_ini, void* param_ini, double 
      else{
           return asym_inst;
      }
+}
+
+
+
+/*
+create prelimary function to test the LNV thermal mass term
+*/
+double mthM_test(const char* argv[]){
+     srand((unsigned int)time(NULL));
+     // srand (static_cast <unsigned> (time(0)));
+     vector<double> vars = read_ini(argv[2]);
+     vector<double> param_ini;
+     double low_angle, high_angle, low_y, high_y, low_M1, high_M1, low_DM_M, high_DM_M;
+
+     double M1, DM_M, y, delta, phi, theta;
+
+     low_angle= 0.0; high_angle= 2.0*_PI_;
+     low_M1= -1; high_M1= 2.;
+     low_DM_M= -14; high_DM_M= -1;
+     low_y= -7; high_y= -5;
+
+
+     // M1             =  low_M1           + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(high_M1-low_M1))); 
+     // DM_M           =  low_DM_M         + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(high_DM_M-low_DM_M)));
+     // y              =  low_y            + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(high_y-low_y)));
+     // delta          =  low_angle        + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(high_angle-low_angle))); 
+     // phi            =  low_angle        + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(high_angle-low_angle))); 
+     // theta          =  low_angle        + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(high_angle-low_angle)));
+
+
+
+     double rand_range_mass        = 3.0;
+     double rand_low_mass          = -1.0;
+     double rand_vector_mass[10]   = {0,0,0,0,0,0,0,0,0,0};
+     for (int i=0;i<5;i++){
+          double aux_mass = ((float)rand()/(float)(RAND_MAX)) * rand_range_mass + rand_low_mass;
+          rand_vector_mass[i] = aux_mass;
+     }
+     M1                            = rand_vector_mass[3];
+
+     double rand_range_dmm         = 13.0;
+     double rand_low_dmm           = -14.0;
+     double rand_vector_dmm[10]    = {0,0,0,0,0,0,0,0,0,0};
+     for (int i=0;i<5;i++){
+          double aux_dmm = ((float)rand()/(float)(RAND_MAX)) * rand_range_dmm + rand_low_dmm;
+          rand_vector_dmm[i] = aux_dmm;
+     }
+     DM_M                          = rand_vector_dmm[3];
+
+
+     double rand_range_y           = 2.0;
+     double rand_low_y             = -7.0;
+     double rand_vector_y[10]      = {0,0,0,0,0,0,0,0,0,0};
+     for (int i=0;i<5;i++){
+          double aux_y = ((float)rand()/(float)(RAND_MAX)) * rand_range_y + rand_low_y;
+          rand_vector_y[i] = aux_y;
+     }
+     y                             = rand_vector_y[3];
+
+
+     double rand_range_angle       = 2*_PI_;
+     double rand_low_angle         = 0.0;
+     double rand_vector_angle[10]  = {0,0,0,0,0,0,0,0,0,0};
+     for (int i=0;i<10;i++){
+          double aux_angle = ((float)rand()/(float)(RAND_MAX)) * rand_range_angle + rand_low_angle;
+          rand_vector_angle[i] = aux_angle;
+     }
+     theta                         = rand_vector_angle[8];
+     delta                         = rand_vector_angle[3];
+     phi                           = rand_vector_angle[5];
+
+
+
+     param_ini           = {vars[1], M1, DM_M, y, theta, delta, phi};
+     void *ptr_param_ini = &param_ini;
+
+
+
+
+
+     cout << "[AMIQS] " << "Testing without LNV Hamiltonian" << endl;
+     vector<double> setting_ini_false   = {vars[19], vars[20], vars[21], vars[22], vars[23], vars[24], 1};
+     void *ptr_setting_ini_false        = &setting_ini_false;
+     double res_mthM_false              = amiqs(0, ptr_setting_ini_false, ptr_param_ini, 0, 0);
+
+     cout << "[AMIQS] " << "Testing with LNV Hamiltonian" << endl;
+     vector<double> setting_ini_true    = {vars[19], vars[20], vars[21], vars[22], vars[23], vars[24], 0};
+     void *ptr_setting_ini_true         = &setting_ini_true;
+     double res_mthM_true               = amiqs(0, ptr_setting_ini_true, ptr_param_ini, 0, 0);
+
+
+     ofstream file;
+     if (vars[1] == 0){
+          file.open("../output/mthM_test_input_final_asym_NH.dat", ios_base::app);
+     }
+     else{
+          file.open("../output/mthM_test_input_final_asym_IH.dat", ios_base::app);
+     }
+     // file << "#" << "M1" << " " << "DM_M" << " " << "y" <<  " " <<"delta" << " " << "phi" << " " << "theta" << " " << "asym H_LNC" << " " << "asym H_full" << endl;
+     file << M1 << " " << DM_M << " " << y << " " << theta << " " << delta << " " << phi << " " << res_mthM_false << " " << res_mthM_true << endl;
+     file.close();
+
+     if (res_mthM_false == 0 && res_mthM_true != 0){
+          cout << " >>>>>>> FAIL <<<<<<<<" << endl;
+          return 0;
+     }
+     if (res_mthM_false != 0 && res_mthM_true == 0){
+          cout << " >>>>>>> FAIL <<<<<<<<" << endl;
+          return 0;
+     }
+
+     if (res_mthM_false != 0 && abs(res_mthM_false) > pow(10,-12)){
+          return res_mthM_true/res_mthM_false;
+     }
+     else{
+          return 1;
+     }
+     
 }
 
 
@@ -1054,16 +1169,23 @@ int main(int argc, const char* argv[]){
      auto start_main = chrono::system_clock::now();
      cout.precision(4);
      vector<double> setting_ini, param_ini;
-
-
+     double res;
 
      /*
      set the rates
      */
      set_rates();
 
+     /*
+     set the LNV thermal mass contribution
+     */
+     set_thermal_mass_lnv();
+
+
+
+
      if(argc < 2){
-          cout << RED <<  "[AMIQS]" << RESET <<    " Need to pass either:\n i) .ini file \n ii) test X where X > 0 " << endl;
+          cout << RED <<  "[AMIQS]" << RESET <<    " Need to pass either:\n i) xxx.ini \n ii) test X where X > 0 \n iii) mthM xxx.ini " << endl;
           exit(0);
      }
 
@@ -1080,16 +1202,16 @@ int main(int argc, const char* argv[]){
                               vars[14], vars[15], vars[16], vars[17], vars[18]  };
           }
           else if(vars[0] == 2){
-               param_ini = {  vars[1], vars[2], vars[3], vars[27], vars[28], vars[6], vars[7]  };
+               param_ini = {  vars[1], vars[2], vars[3], vars[28], vars[29], vars[6], vars[7]  };
           }
           else{
                cout << RED <<  "[AMIQS]" << RESET <<    " Need to pass correct parametrization in the .ini file; 0 or 1 or 2. " << endl;
                exit(0);
           }
           void *ptr_param_ini      = &param_ini;
-          setting_ini              = {vars[19], vars[20], vars[21], vars[22], vars[23], vars[24]};
+          setting_ini              = {vars[19], vars[20], vars[21], vars[22], vars[23], vars[24], vars[25]};
           void *ptr_setting_ini    = &setting_ini;
-          amiqs(vars[0], ptr_setting_ini, ptr_param_ini, vars[25], vars[26]);
+          res = amiqs(vars[0], ptr_setting_ini, ptr_param_ini, vars[26], vars[27]);
      }
      else{
           if (argv[1] == string("test")){
@@ -1097,21 +1219,52 @@ int main(int argc, const char* argv[]){
                fixed settings, dont change
                the analytical formulas are derived under these assumptions
                */
-               setting_ini              = {1, 1, 1, 1, 0, 1};
+               setting_ini              = {1, 1, 1, 1, 0, 1, 1};
                void *ptr_setting_ini    = &setting_ini;
                /*
                amount of testing points is fixed to some random number
                */
-              double test_num= 10.;
+               double test_num;
+               if (argv[2]){
+                    test_num= atof(argv[2]);
+               }
+               else{
+                    test_num= 10.;
+               }
                amiqs_testing(ptr_setting_ini, test_num);
           }
+          else if (argv[1] == string("mthM") && argc > 2){
+               string arg2(argv[2]);
+               bool found2 = arg2.find(".ini") != string::npos;
+               if (found2 == true){
+                    /*
+                    this is for some prelimary testing of the effect of the LNV contribution to the thermal mass
+                    */
+                    res  = mthM_test(argv);
+                    if (res != 0){
+                         cout << "\n" << "Impact of the LNV Hamiltonian " << 100*(res - 1) << "%" << endl;
+                    }
+               }
+               else{
+                    cout << RED <<  "[AMIQS]" << RESET <<    " Need to pass either:\n i) xxx.ini \n ii) test X where X > 0 \n iii) mthM xxx.ini " << endl;
+                    exit(0);   
+               }
+          }
           else{
-               cout << RED <<  "[AMIQS]" << RESET <<    " Need to pass either:\n i) .ini file \n ii) test " << endl;
+               cout << RED <<  "[AMIQS]" << RESET <<    " Need to pass either:\n i) xxx.ini \n ii) test X where X > 0 \n iii) mthM xxx.ini " << endl;
                exit(0);       
           }
      }
 
 
+
+     if (filesystem::exists("../output/res.dat")){
+          remove("../output/res.dat");
+     }
+     ofstream file;
+     file.open("../output/res.dat");
+     file << res << endl;
+     file.close();
 
      /***********************************************************
      Done with everything -- do not put anything below this line
