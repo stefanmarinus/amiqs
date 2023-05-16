@@ -34,7 +34,7 @@ const double _S1_       = 0.008850333885126667;
 const double _S2_       = -0.01636907336566425;
 
 const double _VEV_      = 246.22/sqrt(2);
-const double _MPL_      = 1.2209*pow(10,19)*sqrt(45/4/pow(_PI_,3)/106.75);
+const double _MPL_      = 1.2209*pow(10,19)*sqrt(45./4./pow(_PI_,3)/106.75);
 const double _TSP_      = 131.7;
 const double _TC_       = 160.0;
 const double _XC_       = _TSP_/_TC_;

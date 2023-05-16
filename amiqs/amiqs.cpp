@@ -107,12 +107,9 @@ double mu_to_DM_M(double Lambda, double mu){
 
 /*log scale input but return in linear scale*/
 double D12(double M1, double DM_M){
-     // vector<double> param_var      = *(vector<double> *)param_ini;
-     // double M1                     = pow(10,param_var[0]);
-     // double DM_M                   = pow(10,param_var[1]);
      double M2                     = pow(10,M1) * (pow(10,DM_M) + 1.);
 
-     return pow(M2,2) - pow(pow(10,M1),2);
+     return pow(M2,2.) - pow(pow(10,M1),2);
 }
 
 
