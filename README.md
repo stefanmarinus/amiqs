@@ -1,4 +1,4 @@
-[![arXiv](https://img.shields.io/badge/arXiv-2207.01651-B31B1B.svg)](http://arxiv.org/abs/2207.01651) [![DOI](https://zenodo.org/badge/514328252.svg)](https://zenodo.org/badge/latestdoi/514328252) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Language](https://img.shields.io/badge/language-C++-green.svg)](https://www.cplusplus.com)
+[![arXiv](https://img.shields.io/badge/arXiv-2207.01651-B31B1B.svg)](http://arxiv.org/abs/2207.01651) [![arXiv](https://img.shields.io/badge/arXiv-2305.14427-B31B1B.svg)](http://arxiv.org/abs/2305.14427)  [![DOI](https://zenodo.org/badge/514328252.svg)](https://zenodo.org/badge/latestdoi/514328252) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Language](https://img.shields.io/badge/language-C++-green.svg)](https://www.cplusplus.com)
 
 
 
@@ -49,11 +49,11 @@ For more explanation please see the file 'example.ini'.
 
 ## Citation
 
-If you use the code, please link this repository, and cite [arXiv:2207.01651](http://arxiv.org/abs/2207.01651).
+If you use the code, please link this repository, and cite [arXiv:2207.01651](http://arxiv.org/abs/2207.01651) and [arXiv:2305.14427](http://arxiv.org/abs/2305.14427).
 
 ## Contact
 
-For any type of comments, questions etc. feel free to contact us at <stefan.sandner@ific.uv.es> :otter:.
+For any type of comments, questions etc. feel free to contact us at <stefan.sandner@ific.uv.es>.
 
 ## Acknowledgement 
 

@@ -1164,7 +1164,7 @@ double amiqs_testing(void* setting_ini, int test_num){
 int main(int argc, const char* argv[]){
      (void)argc; (void)argv;
      auto start_main = chrono::system_clock::now();
-     cout.precision(4);
+     cout.precision(5);
      vector<double> setting_ini, param_ini;
      double res;
 
