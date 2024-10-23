@@ -53,7 +53,7 @@ If you use the code, please link this repository, and cite [arXiv:2207.01651](ht
 
 ## Contact
 
-For any type of comments, questions etc. feel free to contact us at <stefan.sandner@ific.uv.es>.
+For any type of comments, questions etc. feel free to contact us at <stefansandner@lbl.gov>.
 
 ## Acknowledgement 
 
